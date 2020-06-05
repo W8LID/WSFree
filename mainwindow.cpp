@@ -106,6 +106,9 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(readControllerData()));
     timer->start(2000);
+    
+    // Unit ID change
+    connect(ui->unitID, SIGNAL(textChanged(const QString &)), this, SLOT(updateID()));
 }
 
 MainWindow::~MainWindow()
@@ -116,6 +119,16 @@ MainWindow::~MainWindow()
 void MainWindow::on_scanButton_clicked()
 {
     updatePorts();
+}
+
+void MainWindow::on_actionReset_triggered()
+{
+    resetAll();
+}
+
+void MainWindow::updateID()
+{
+    unitNumber = ui->unitID->text();
 }
 
 void MainWindow::updatePorts()
@@ -196,6 +209,15 @@ void MainWindow::resetOilSample()
     sendReset(OIL_SAMPLE);
 }
 
+void MainWindow::resetAll()
+{
+    for(int i = 0; i <= 4; i++){
+    sendReset(i);
+    }
+    
+    showStatusMessage(tr("All Reset"));
+}
+
 void MainWindow::openSerialPort()
 {
     const QString serialPortName = portNames[selectedPortIndex];
@@ -271,6 +293,7 @@ void MainWindow::sendCommand(const QString &command)
 {
     // Commands start with 0x02 and end with a new line
     // Checksum is on everything except 0x02
+    
     QString fullMessage;
     fullMessage += unitNumber;
     fullMessage += command;
