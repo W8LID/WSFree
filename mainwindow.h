@@ -53,12 +53,15 @@ private:
 
 private slots:
     void on_scanButton_clicked();
+    void on_actionReset_triggered();
     void on_comboBox_currentIndexChanged(int index);
+    void updateID();
     void resetAirFilter();
     void resetOilFilter();
     void resetSeparator();
     void resetOil();
     void resetOilSample();
+    void resetAll();
     void openSerialPort();
     void closeSerialPort();
     //void about();
